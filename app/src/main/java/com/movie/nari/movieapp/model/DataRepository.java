@@ -10,6 +10,7 @@ import io.reactivex.schedulers.Schedulers;
 public class DataRepository {
 
     private List<NowPlaying> nowPlayingList;
+    private List<Trailers> trailersList;
 
     public DataRepository() {
         MyApplication.getInstance().getClient()
