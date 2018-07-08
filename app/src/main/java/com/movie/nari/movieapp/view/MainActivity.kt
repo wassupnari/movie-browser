@@ -2,8 +2,10 @@ package com.movie.nari.movieapp.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.os.Parcelable
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 
@@ -17,13 +19,24 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter : RecyclerViewAdapter
+    private var isLandscape = false
+    private var listState : Parcelable? = null
+    private lateinit var layoutManager : LinearLayoutManager
+
+    companion object {
+        val LIST_STATE = "recyclerview_state"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initBinding()
         initView()
-//        viewModel.fetchData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        layoutManager.onRestoreInstanceState(listState)
     }
 
     private fun initBinding() {
@@ -37,17 +50,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        val lm = LinearLayoutManager(this)
-        binding.recyclerview.layoutManager = lm
+        layoutManager = LinearLayoutManager(this)
+        binding.recyclerview.layoutManager = layoutManager
 
     }
 
     private fun observeViewModel() {
         viewModel.nowPlayingList.observe(this, Observer {
             Timber.d("received data")
-            adapter = RecyclerViewAdapter(it)
+            adapter = RecyclerViewAdapter(it, isLandscape)
             binding.recyclerview.adapter = adapter
 //            adapter.update(it)
         })
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        isLandscape = (newConfig!!.orientation == Configuration.ORIENTATION_LANDSCAPE)
+        adapter.notifyDataSetChanged()
+        Timber.e("configuration changed, landscape ? " + isLandscape)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        listState = layoutManager.onSaveInstanceState()
+        outState!!.putParcelable(LIST_STATE, listState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        listState = savedInstanceState?.getParcelable(LIST_STATE)
     }
 }

@@ -15,6 +15,7 @@ import timber.log.Timber;
 public class MyApplication extends Application {
 
     private static final String BASE_URL = "https://api.themoviedb.org/";
+    public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500/";
 
     private OkHttpClient okHttpClient;
     private Retrofit retrofit;

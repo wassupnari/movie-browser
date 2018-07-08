@@ -12,7 +12,7 @@ typealias DataReceived = (List<NowPlaying>) -> Unit
 class DataRepository {
 
     fun fetchNowPlayingList(dataReceived: DataReceived) {
-         var playListObserver = object : Observer<List<NowPlaying>> {
+         val playListObserver = object : Observer<List<NowPlaying>> {
             override fun onSubscribe(d: Disposable) {
 
             }
