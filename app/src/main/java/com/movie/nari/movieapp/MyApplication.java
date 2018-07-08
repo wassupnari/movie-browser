@@ -10,6 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import timber.log.Timber;
 
 public class MyApplication extends Application {
 
@@ -17,7 +18,6 @@ public class MyApplication extends Application {
 
     private OkHttpClient okHttpClient;
     private Retrofit retrofit;
-    private static DataRepository dataRepository;
 
     private static MyApplication instance;
 
@@ -25,7 +25,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        dataRepository = new DataRepository(getClient());
+        Timber.plant(new Timber.DebugTree());
     }
 
     public static MyApplication getInstance() {
@@ -61,9 +61,5 @@ public class MyApplication extends Application {
                 .build();
 
         return retrofit.create(ApiService.class);
-    }
-
-    public DataRepository getDataRepository() {
-        return dataRepository;
     }
 }
