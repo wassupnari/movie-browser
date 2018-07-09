@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         initBinding()
         initView()
     }
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         layoutManager.onRestoreInstanceState(listState)
+        observeViewModel()
     }
 
     private fun initBinding() {
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             it.viewModel = viewModel
             it.setLifecycleOwner(this)
         }
-        observeViewModel()
+
     }
 
     private fun initView() {
@@ -67,7 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         isLandscape = (newConfig!!.orientation == Configuration.ORIENTATION_LANDSCAPE)
-        adapter.notifyDataSetChanged()
+        observeViewModel()
         Timber.e("configuration changed, landscape ? " + isLandscape)
     }
 
