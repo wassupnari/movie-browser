@@ -14,9 +14,6 @@ import com.movie.nari.movieapp.R
 import com.movie.nari.movieapp.databinding.ActivityMainBinding
 import com.movie.nari.movieapp.viewmodel.MainViewModel
 import timber.log.Timber
-import android.widget.Toast
-import io.reactivex.annotations.NonNull
-import io.reactivex.functions.Consumer
 
 
 class MainActivity : AppCompatActivity() {
@@ -66,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             binding.recyclerview.adapter = adapter
             adapter.positionClicks.subscribe({
                 val options : ActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it.second.findViewById(R.id.poster_image),"poster")
-                startActivity(DetailActivity.newIntent(this, it.first), options.toBundle())
+                startActivity(DetailActivity.newIntent(this, it.first, isLandscape), options.toBundle())
             })
 //            adapter.update(it)
         })
