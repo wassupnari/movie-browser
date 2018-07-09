@@ -3,6 +3,7 @@ package com.movie.nari.movieapp.view;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +17,16 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.PublishSubject;
 import timber.log.Timber;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<NowPlaying> nowPlayingList;
     private boolean isLandscape;
+
+    private final PublishSubject<Pair<Integer, View>> onClickSubject = PublishSubject.create();
 
     static class PortraitViewHolder extends RecyclerView.ViewHolder {
 
@@ -83,7 +89,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         isLandscape = parent.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        Timber.d("is landscape? " + isLandscape);
         if (isLandscape) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_now_playing_landscape, parent, false);
             return new LandscapeViewHolder(v, parent.getContext());
@@ -95,6 +100,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        holder.itemView.setOnClickListener(v -> onClickSubject.onNext(new Pair(position, holder.itemView)));
         if (holder instanceof PortraitViewHolder) {
             ((PortraitViewHolder) holder).bindView(nowPlayingList.get(position));
         } else if (holder instanceof LandscapeViewHolder) {
@@ -106,6 +112,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public int getItemCount() {
         return nowPlayingList.size();
+    }
+
+    public Observable<Pair<Integer, View>> getPositionClicks(){
+        return onClickSubject;
     }
 
     public void update(List<NowPlaying> nowPlayingList) {

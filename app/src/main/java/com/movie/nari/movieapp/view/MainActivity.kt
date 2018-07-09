@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.Parcelable
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 
@@ -13,6 +14,10 @@ import com.movie.nari.movieapp.R
 import com.movie.nari.movieapp.databinding.ActivityMainBinding
 import com.movie.nari.movieapp.viewmodel.MainViewModel
 import timber.log.Timber
+import android.widget.Toast
+import io.reactivex.annotations.NonNull
+import io.reactivex.functions.Consumer
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,8 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         initBinding()
         initView()
     }
@@ -59,9 +62,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.nowPlayingList.observe(this, Observer {
-            Timber.d("received data")
             adapter = RecyclerViewAdapter(it, isLandscape)
             binding.recyclerview.adapter = adapter
+            adapter.positionClicks.subscribe({
+                val options : ActivityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(this, it.second.findViewById(R.id.poster_image),"poster")
+                startActivity(DetailActivity.newIntent(this, it.first), options.toBundle())
+            })
 //            adapter.update(it)
         })
     }
