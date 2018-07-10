@@ -9,6 +9,7 @@ import android.os.Parcelable
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 
 import com.movie.nari.movieapp.R
 import com.movie.nari.movieapp.databinding.ActivityMainBinding
@@ -59,6 +60,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.nowPlayingList.observe(this, Observer {
+            binding.progressbar.visibility = View.GONE
+            if(it?.size!! == 0) Timber.d("data null")
             adapter = RecyclerViewAdapter(it, isLandscape)
             binding.recyclerview.adapter = adapter
             adapter.positionClicks.subscribe({

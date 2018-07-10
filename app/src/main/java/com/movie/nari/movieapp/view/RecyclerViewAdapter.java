@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.movie.nari.movieapp.MyApplication;
 import com.movie.nari.movieapp.R;
 import com.movie.nari.movieapp.model.NowPlaying;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -32,6 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView posterView;
         TextView titleView;
         TextView overviewView;
+        ProgressBar progressbar;
 
         PortraitViewHolder(View v, Context context) {
             super(v);
@@ -39,13 +42,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             posterView = v.findViewById(R.id.poster_image);
             titleView = v.findViewById(R.id.title_view);
             overviewView = v.findViewById(R.id.overview_view);
+            progressbar = v.findViewById(R.id.progressbar);
         }
 
         void bindView(NowPlaying nowPlaying) {
 
             Picasso.with(context)
                     .load(MyApplication.IMAGE_BASE_URL + nowPlaying.getPoster_path())
-                    .into(posterView);
+                    .into(posterView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            if(progressbar != null)
+                                progressbar.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                        }
+                    });
 
             titleView.setText(nowPlaying.getTitle());
             overviewView.setText(nowPlaying.getOverview());
@@ -58,6 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView posterView;
         TextView titleView;
         TextView overviewView;
+        ProgressBar progressbar;
 
         LandscapeViewHolder(View v, Context context) {
             super(v);
@@ -65,13 +80,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             posterView = v.findViewById(R.id.poster_image);
             titleView = v.findViewById(R.id.title_view);
             overviewView = v.findViewById(R.id.overview_view);
+            progressbar = v.findViewById(R.id.progressbar);
         }
 
         void bindView(NowPlaying nowPlaying) {
 
             Picasso.with(context)
                     .load(MyApplication.IMAGE_BASE_URL + nowPlaying.getBackdrop_path())
-                    .into(posterView);
+                    .into(posterView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            if(progressbar != null)
+                                progressbar.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                        }
+                    });
 
             titleView.setText(nowPlaying.getTitle());
             overviewView.setText(nowPlaying.getOverview());
