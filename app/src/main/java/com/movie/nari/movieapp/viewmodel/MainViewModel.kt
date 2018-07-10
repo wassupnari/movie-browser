@@ -23,6 +23,8 @@ class MainViewModel : ViewModel() {
     }
 
     fun fetchData() {
-        dataRepository.fetchNowPlayingList{ nowPlayingList.postValue(it) }
+        dataRepository.fetchNowPlayingList{
+            nowPlayingList.postValue(it)
+        }
     }
 }

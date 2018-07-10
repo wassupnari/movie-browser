@@ -22,7 +22,6 @@ class DataRepository {
             }
 
             override fun onError(e: Throwable) {
-
             }
 
             override fun onComplete() {
