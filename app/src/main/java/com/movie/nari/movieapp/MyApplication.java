@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.movie.nari.movieapp.model.DataRepository;
 import com.movie.nari.movieapp.network.ApiService;
+import com.movie.nari.movieapp.network.NetworkManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -14,11 +15,8 @@ import timber.log.Timber;
 
 public class MyApplication extends Application {
 
-    private static final String BASE_URL = "https://api.themoviedb.org/";
-    public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500/";
 
-    private OkHttpClient okHttpClient;
-    private Retrofit retrofit;
+    public static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500/";
 
     private static MyApplication instance;
 
@@ -38,29 +36,5 @@ public class MyApplication extends Application {
             }
         }
         return instance;
-    }
-
-    private OkHttpClient createHttpClient() {
-        if(okHttpClient != null) return okHttpClient;
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .build();
-        return okHttpClient;
-    }
-
-    public ApiService getClient() {
-        if(retrofit != null) return retrofit.create(ApiService.class);
-
-        retrofit = new Retrofit.Builder()
-                .client(createHttpClient())
-                .baseUrl(BASE_URL)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        return retrofit.create(ApiService.class);
     }
 }

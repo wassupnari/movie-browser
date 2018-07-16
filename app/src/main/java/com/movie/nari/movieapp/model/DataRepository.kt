@@ -1,6 +1,7 @@
 package com.movie.nari.movieapp.model
 
 import com.movie.nari.movieapp.MyApplication
+import com.movie.nari.movieapp.network.NetworkManager
 
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,6 +11,10 @@ import io.reactivex.schedulers.Schedulers
 typealias DataReceived = (List<NowPlaying>) -> Unit
 
 class DataRepository {
+
+    val networkClient by lazy {
+        NetworkManager.getClient()
+    }
 
     fun fetchNowPlayingList(dataReceived: DataReceived) {
          val playListObserver = object : Observer<List<NowPlaying>> {
@@ -29,7 +34,7 @@ class DataRepository {
             }
         }
 
-        MyApplication.getInstance().client.getNowPlaying("a07e22bc18f5cb106bfe4cc1f83ad8ed")
+        networkClient.getNowPlaying("a07e22bc18f5cb106bfe4cc1f83ad8ed")
                 .map { (results) -> results }
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
