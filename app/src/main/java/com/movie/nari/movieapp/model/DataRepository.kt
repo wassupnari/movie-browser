@@ -1,5 +1,6 @@
 package com.movie.nari.movieapp.model
 
+import com.movie.nari.movieapp.BuildConfig
 import com.movie.nari.movieapp.MyApplication
 import com.movie.nari.movieapp.network.NetworkManager
 
@@ -34,7 +35,7 @@ class DataRepository {
             }
         }
 
-        networkClient.getNowPlaying("a07e22bc18f5cb106bfe4cc1f83ad8ed")
+        networkClient.getNowPlaying(BuildConfig.API_KEY)
                 .map { (results) -> results }
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
